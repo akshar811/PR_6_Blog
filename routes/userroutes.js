@@ -26,7 +26,7 @@ Route.patch("/blog/like/:id",isAuthenticated,likeblog);
 
 Route.patch("/blog/comment/:id",isAuthenticated,comment);
 
-// Route.get("/blog/search",search);
+Route.get("/blog/search",search);
 
 
 module.exports = Route;

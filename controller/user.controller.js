@@ -166,8 +166,7 @@ const comment = async (req, res) => {
     if (!blog) {
       return res.status(404).json({ error: 'Blog not found' });
     }
-
-    // Add the user's comment to the comments array
+    
     blog.comments.push({ username, text });
 
     await blog.save();
@@ -179,25 +178,25 @@ const comment = async (req, res) => {
   }
 };
 
-// const search = async (req, res) => {
-//   try {
-//     const query = req.query.blogs;
-//     const blogs = await Blog.find();
+const search = async (req, res) => {
+  try {
+    const query = req.query.blogs;
+    const blogs = await Blog.find();
 
-//     const options = {
-//       keys: ["author", "category", "title"],
-//     };
+    const options = {
+      keys: ["author", "category", "title"],
+    };
 
-//     const fuse = new Fuse(blogs, options);
+    const fuse = new Fuse(blogs, options);
 
-//     const result = fuse.search(query);
+    const result = fuse.search(query);
 
-//     res.json(result);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// };
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   signups,
@@ -212,5 +211,6 @@ module.exports = {
   editblog,
   singleblog,
   likeblog,
-  comment
+  comment,
+  search
 };
