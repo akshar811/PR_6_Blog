@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Single Blog</title>
+</head>
+<body>
+  <div id="blog">
+    <img id="img" src="/images/<%= singleBlog.image %>" alt="<%= singleBlog.title %>">
+    <h3 id="title"><%= singleBlog.title %></h3>
+    <span id="category"><%= singleBlog.category %></span>
+    <p id="content"><%= singleBlog.content %></p>
+    <button id="like">Like</button>
+    <span id="count"><%= singleBlog.likedBy.length %> Likes</span>
+
+    <form id="comment" action="/blog/comment/<%= singleBlog._id %>" method="POST">
+      <input type="text" name="text" placeholder="Add a comment">
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+<script>
+  // JavaScript to handle liking a blog
+  document.getElementById('like').addEventListener('click', () => {
+    const blogId = "<%= singleBlog._id %>"; 
+    fetch(`/blog/like/${blogId}`, {
+      method: 'PATCH',
+    })
+      .then((response) => response.json())
+      .then((updatedBlog) => {
+        // Update the like count in your view
+        document.getElementById('count').textContent = `${updatedBlog.likedBy.length} Likes`;
+      })
+      .catch((error) => console.error(error));
+  });
+</script>
+
+</html>
