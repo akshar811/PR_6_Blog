@@ -18,7 +18,7 @@ app.use("/",Route)
 
 
 app.get("/", (req, res) => {
-    res.send("Welcome to the blog API ");
+    res.send("Welcome to the movie API");
 });
 
 app.listen(8090 , ()=>{

@@ -1,5 +1,6 @@
 const Blog = require("../models/blog.schema");
 const User = require("../models/user.schema");
+const Fuse = require('fuse.js');
 
 const signup = async (req, res) => {
   const { username, password, email, role } = req.body;
@@ -52,7 +53,7 @@ const createBlog = async (req, res) => {
   const { title, content, image, category } = req.body;
   let id = req.cookies.id;
   let userdata = await User.findById(id);
-  console.log("userdata", userdata);
+  // console.log("userdata", userdata);
 
   const newBlog = new Blog({
     title,
@@ -140,62 +141,45 @@ const singleblog = async (req, res) => {
 
 const likeblog = async (req, res) => {
   const blogId = req.params.id;
-  const username = req.cookies.username;
-    const blog = await Blog.findById(blogId);
-
-    if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
-    } 
-    blog.likes.push(username);
-
+  const blog = await Blog.findById(blogId);
+  let user = await User.findById(req.cookies.id);
+  if (!blog) {
+    return res.status(404).json({ error: "Blog not found" });
+  } else {
+    blog.likedBy.push({ username: user.username });
     await blog.save();
-
     res.json(blog);
-
-  }
-
-
-const comment = async (req, res) => {
-  const blogId = req.params.id;
-  const username = req.cookies.username;
-  const { text } = req.body;
-
-  try {
-    const blog = await Blog.findById(blogId);
-
-    if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
-    }
-    
-    blog.comments.push({ username, text });
-
-    await blog.save();
-
-    res.json(blog);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-const search = async (req, res) => {
-  try {
-    const query = req.query.blogs;
-    const blogs = await Blog.find();
+const comment = async (req, res) => {
+  const blogId = req.params.id;
+  const { text } = req.body; // Get the comment text from the request body
 
-    const options = {
-      keys: ["author", "category", "title"],
-    };
+  const blog = await Blog.findById(blogId);
+  let user = await User.findById(req.cookies.id);
 
-    const fuse = new Fuse(blogs, options);
-
-    const result = fuse.search(query);
-
-    res.json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+  if (!blog) {
+    return res.status(404).json({ error: "Blog not found" });
+  } else {
+    blog.comments.push({ username: user.username, text: text }); // Use the 'text' variable for the comment text
+    await blog.save();
+    res.json(blog);
   }
+};
+const search = async (req, res) => {
+  const query = req.query.blogs;
+  const blogs = await Blog.find();
+
+  const options = {
+    keys: ["author", "category", "title"],
+  };
+
+  const fuse = new Fuse(blogs, options);
+
+  const result = fuse.search(query);
+
+  res.json(result);
 };
 
 module.exports = {
