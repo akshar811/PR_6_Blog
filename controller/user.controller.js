@@ -1,18 +1,17 @@
 const Blog = require("../models/blog.schema");
 const User = require("../models/user.schema");
-const Fuse = require('fuse.js');
+const Fuse = require("fuse.js");
 
 const signup = async (req, res) => {
   const { username, password, email, role } = req.body;
   const Users = await User.findOne({ email: email });
-  // console.log(Users);
   if (Users) {
     res.cookie("role", Users.role);
     res.cookie("id", Users.id);
 
     res.send(`Account created successfully ${Users.username}`);
   } else {
-    const newUser = new User({ username, password, email, role });
+    let newUser = await User.create(req.body);
 
     res.cookie("role", newUser.role);
     res.cookie("id", newUser.id);
@@ -32,20 +31,15 @@ const loginpage = (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email });
 
-    if (!user || user.password !== password) {
-      return res.send("Invalid Credentials.");
-    }
-
+  if (!user || user.password !== password) {
+    return res.send("Invalid Credentials.");
+  } else {
     res.cookie("role", user.role);
     res.cookie("id", user.id);
 
     res.send(`Welcome User ${user.username}`);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -53,8 +47,8 @@ const createBlog = async (req, res) => {
   const { title, content, image, category } = req.body;
   let id = req.cookies.id;
   let userdata = await User.findById(id);
-  // console.log("userdata", userdata);
-
+  // console.log(id);
+  console.log(userdata);
   const newBlog = new Blog({
     title,
     content,
@@ -69,7 +63,7 @@ const createBlog = async (req, res) => {
 
 const craeteblogform = (req, res) => {
   if (req.cookies.role !== "admin") {
-    return res.send("You are not authorized to access this page.");
+    return res.send("Login First");
   }
   res.render("blogcreate");
 };
@@ -196,5 +190,5 @@ module.exports = {
   singleblog,
   likeblog,
   comment,
-  search
+  search,
 };

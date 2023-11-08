@@ -1,7 +1,6 @@
 
 
   const authorize = (req, res, next) => {
-    // console.log(req.cookies);
     if (req.cookies.role !== 'admin') {
       res.send('You are not authorized to access this page.');
     } else {
