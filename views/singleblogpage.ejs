@@ -4,15 +4,124 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Single Blog</title>
+  <style>
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .navbar {
+        background-color: #333;
+        color: white;
+        padding: 23px;
+        margin-bottom: 30px;
+      }
+      .navbar ul {
+        list-style-type: none;
+        display: flex;
+        justify-content: space-evenly;
+        padding: 0;
+      }
+      .navbar li {
+        margin: 0 15px;
+      }
+      .navbar a {
+        text-decoration: none;
+        color: white;
+        transition: color 0.3s;
+        font-size: 19px;
+      }
+      .navbar a:hover {
+        color: #007bff;
+      }
+      #blog {
+        background-color: white;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      #img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+
+      #title {
+        font-size: 24px;
+        margin: 20px 0;
+        color: #333;
+      }
+
+      #category {
+        font-weight: bold;
+        color: #007bff;
+      }
+
+      #content {
+        margin: 20px 0;
+        line-height: 1.6;
+      }
+
+      #like {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-bottom: 5px;
+      }
+
+      #like:hover {
+        background-color: #0056b3;
+      }
+
+      #count {
+        margin-left: 10px;
+        color: #333;
+        font-size: 18px;
+      }
+
+      #comment input[type="text"] {
+        width: 80%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+
+      #comment button[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      #comment button[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+  </style>
 </head>
 <body>
+  <%-include("header") %>
   <div id="blog">
-    <img id="img" src="/images/<%= singleBlog.image %>" alt="<%= singleBlog.title %>">
+    <img id="img" src="<%= singleBlog.image %>" alt="<%= singleBlog.title %>">
     <h3 id="title"><%= singleBlog.title %></h3>
     <span id="category"><%= singleBlog.category %></span>
     <p id="content"><%= singleBlog.content %></p>
     <button id="like">Like</button>
-    <span id="count"><%= singleBlog.likedBy.length %> Likes</span>
+    <span id="count"><%= singleBlog.likedBy.length %></span>
 
     <form id="comment" action="/blog/comment/<%= singleBlog._id %>" method="POST">
       <input type="text" name="text" placeholder="Add a comment">
@@ -21,19 +130,21 @@
   </div>
 </body>
 <script>
-  // JavaScript to handle liking a blog
-  document.getElementById('like').addEventListener('click', () => {
-    const blogId = "<%= singleBlog._id %>"; 
-    fetch(`/blog/like/${blogId}`, {
-      method: 'PATCH',
-    })
-      .then((response) => response.json())
-      .then((updatedBlog) => {
-        // Update the like count in your view
-        document.getElementById('count').textContent = `${updatedBlog.likedBy.length} Likes`;
-      })
-      .catch((error) => console.error(error));
-  });
+ 
+ const likeButton = document.getElementById("like");
+    likeButton.addEventListener("click", () => {
+    //   let id = document.getElementById("id").innerHTML;
+      let url= window.location.href.split("/")
+      let id=url[url.length-1]
+      fetch(`/blog/like/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+      }).then(() => {
+        let count = document.getElementById("count").innerHTML;
+
+        document.getElementById("count").innerHTML = Number(count) + 1;
+      });
+    });
 </script>
 
 </html>

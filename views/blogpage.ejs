@@ -4,17 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog Page</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+    <link rel="stylesheet" href="../assets/blogpage.css">
   </head>
   <body>
-    <nav>
-      <ul>
-        <li><a href="/blog">Home</a></li>
-        <li><a href="/blog/blogs?category=technology">Technology</a></li>
-        <li><a href="/blog/blogs?category=sports">Sports</a></li>
-        <li><a href="/blog/blogs?category=health">Health</a></li>
-      </ul>
-    </nav>
-
+    <%-include("header") %>
     <div id="blog">
      
     </div>
@@ -23,56 +17,25 @@
   </body>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const parentBox = document.getElementById("parent-box");
+    fetch("/blog/blogs")
+      .then((value) => value.json())
+      .then((data) => {
+        data.map((ele) => {
+          let img = document.createElement("img");
+          img.src = `${ele.image}`;
+          img.setAttribute("class", "img");
+          let title = document.createElement("p");
+          title.innerHTML = ele.title;
+          title.setAttribute("class", "title");
+          let div = document.createElement("div");
+          div.append(img, title);
+          div.setAttribute("class", "list");
+          document.getElementById("parent-box").append(div);
 
-      fetch("/blog/blogs")
-        .then((response) => response.json())
-        .then((data) => {
-          data.forEach((blog) => {
-            const blogDiv = document.createElement("div");
-            blogDiv.className = "list";
-
-            const blogImage = document.createElement("img");
-            blogImage.id = "img";
-            blogImage.src = `${blog.image}`;
-
-            const blogTitle = document.createElement("p");
-            blogTitle.id = "title";
-            blogTitle.textContent = blog.title;
-
-            const blogCategory = document.createElement("p");
-            blogCategory.id = "category";
-            blogCategory.textContent = blog.category;
-
-            const blogContent = document.createElement("p");
-            blogContent.id = "content";
-            blogContent.textContent = blog.content;
-
-            const blogLike = document.createElement("p");
-            blogLike.id = "like"; 
-            blogLike.textContent = blog.like;
-
-            const blogCount = document.createElement("p");
-            blogCount.id = "count";
-            blogCount.textContent = blog.count;
-
-            const blogComment = document.createElement("p");
-            blogComment.id = "comment";
-            blogComment.textContent = blog.comment;
-
-        
-            blogDiv.appendChild(blogComment);
-            blogDiv.appendChild(blogCount);
-            blogDiv.appendChild(blogLike);
-            blogDiv.appendChild(blogContent);
-            blogDiv.appendChild(blogCategory);
-            blogDiv.appendChild(blogImage);
-            blogDiv.appendChild(blogTitle);
-
-            parentBox.appendChild(blogDiv);
+          div.addEventListener("click", () => {
+            window.location.href = `/blog/singleblog/${ele._id}`;
           });
-        })
-    });
+        });
+      });
   </script>
 </html>
