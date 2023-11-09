@@ -1,6 +1,6 @@
 const Blog = require("../models/blog.schema");
 const User = require("../models/user.schema");
-const Fuse = require('fuse.js');
+const Fuse = require("fuse.js");
 
 const signup = async (req, res) => {
   const { username, password, email, role } = req.body;
@@ -11,7 +11,7 @@ const signup = async (req, res) => {
 
     res.send(`Account created successfully ${Users.username}`);
   } else {
-    let newUser = await User.create(req.body)
+    let newUser = await User.create(req.body);
 
     res.cookie("role", newUser.role);
     res.cookie("id", newUser.id);
@@ -31,19 +31,16 @@ const loginpage = (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
 
-    const user = await User.findOne({ email : email });
+  const user = await User.findOne({ email: email });
 
-    if (!user || user.password !== password) {
-      return res.send("Invalid Credentials.");
-    }
+  if (!user || user.password !== password) {
+    return res.send("Invalid Credentials.");
+  } else {
+    res.cookie("role", user.role);
+    res.cookie("id", user.id);
 
-    else{
-      res.cookie("role", user.role);
-      res.cookie("id", user.id);
-  
-      res.send(`Welcome User ${user.username}`);
-    }
-  
+    res.send(`Welcome User ${user.username}`);
+  }
 };
 
 const createBlog = async (req, res) => {
@@ -193,5 +190,5 @@ module.exports = {
   singleblog,
   likeblog,
   comment,
-  search
+  search,
 };
