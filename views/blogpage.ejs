@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog Page</title>
     <link rel="stylesheet" href="../assets/style.css" />
-    <link rel="stylesheet" href="../assets/blogpage.css">
+    <link rel="stylesheet" href="../assets/blogpage.css" />
   </head>
   <body>
     <%-include("header") %>
-    <div id="blog">
-     
-    </div>
+    <div id="blog"></div>
 
     <div id="parent-box"></div>
   </body>
@@ -22,8 +20,8 @@
       .then((data) => {
         data.map((ele) => {
           let img = document.createElement("img");
-          img.src = `${ele.image}`;
-          img.setAttribute("class", "img");
+          img.src = `${ele.image}`;               
+          img.setAttribute("class", "img");        
           let title = document.createElement("p");
           title.innerHTML = ele.title;
           title.setAttribute("class", "title");

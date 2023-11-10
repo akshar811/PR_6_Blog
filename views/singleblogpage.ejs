@@ -119,22 +119,14 @@
   <body>
     <%-include("header") %>
     <div id="blog">
-      <img
-        id="img"
-        src="<%= singleBlog.image %>"
-        alt="<%= singleBlog.title %>"
-      />
+      <img id="img"  src="<%= singleBlog.image %>" alt="<%= singleBlog.title %>" />
       <h3 id="title"><%= singleBlog.title %></h3>
       <span id="category"><%= singleBlog.category %></span>
       <p id="content"><%= singleBlog.content %></p>
       <button id="like">Like</button>
       <span id="count"><%= singleBlog.likedBy.length %></span>
 
-      <form
-        id="comment"
-        action="/blog/comment/<%= singleBlog._id %>"
-        method="POST"
-      >
+      <form id="comment" action="/blog/comment/<%= singleBlog._id %>" method="POST">
         <input type="text" name="text" placeholder="Add a comment" />
         <button type="submit">Submit</button>
       </form>

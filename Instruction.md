@@ -24,7 +24,7 @@ You are tasked with building an API for a Blog. The project should include the f
 
 ## Implement in MVC Structure
 
-### Database Connection
+### ``Database`` Connection
 
 1. Create a 'config' folder. Inside this folder, create a file named 'db.js'. Write logic to connect to MongoDB using an online database such as MongoDB Atlas.
 
