@@ -8,7 +8,7 @@ const signup = async (req, res) => {
   if (Users) {
     res.cookie("role", Users.role);
     res.cookie("id", Users.id);
-
+   
     res.send(`Account created successfully ${Users.username}`);
   } else {
     let newUser = await User.create(req.body);
@@ -47,15 +47,7 @@ const createBlog = async (req, res) => {
   const { title, content, image, category } = req.body;
   let id = req.cookies.id;
   let userdata = await User.findById(id);
-  // console.log(id);
-  console.log(userdata);
-  const newBlog = new Blog({
-    title,
-    content,
-    image,
-    category,
-    author: userdata.username,
-  });
+  const newBlog = new Blog({ title,content, image, category, author: userdata.username,});
   await newBlog.save();
   res.cookie("blogId", newBlog.id);
   res.send(`Blog created by ${userdata.username}`);
@@ -78,6 +70,7 @@ const blogs = async (req, res) => {
 
   const blogs = await Blog.find(query);
   res.json(blogs);
+    
 };
 
 const blog = (req, res) => {
