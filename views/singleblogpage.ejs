@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Single Blog</title>
-    <style>
+     <style>
       * {
         margin: 0;
         padding: 0;
@@ -114,7 +114,8 @@
       #comment button[type="submit"]:hover {
         background-color: #0056b3;
       }
-    </style>
+     </style>
+
   </head>
   <body>
     <%-include("header") %>
@@ -146,5 +147,6 @@
         document.getElementById("count").innerHTML = Number(count) + 1;
       });
     });
+    
   </script>
 </html>

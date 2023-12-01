@@ -70,7 +70,6 @@ const blogs = async (req, res) => {
 
   const blogs = await Blog.find(query);
   res.json(blogs);
-    
 };
 
 const blog = (req, res) => {
@@ -86,11 +85,11 @@ const editblog = async (req, res) => {
     const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateData, {
       new: true,
     });
-
+        
     if (!updatedBlog) {
       return res.status(404).send("Blog not found.");
     }
-
+        
     res.status(200).json(updatedBlog);
   } catch (err) {
     console.error(err);
